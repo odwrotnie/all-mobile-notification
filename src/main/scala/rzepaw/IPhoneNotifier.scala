@@ -8,9 +8,10 @@ import scala.concurrent.{Future => SFuture, Promise}
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-case class IPhoneNotifier(token: String) {
+case class IPhoneNotifier(token: String)
+  extends Notifier {
 
-  def notify(message: String): SFuture[Try[String]] = {
+  override def notify(message: String, href: Option[String]): SFuture[Try[String]] = {
 
     val certificate: File = new File(getClass().getResource("/apple.certificate").toURI)
 
@@ -23,7 +24,7 @@ case class IPhoneNotifier(token: String) {
     val payload = payloadBuilder.buildWithDefaultMaximumLength()
     val sanitizedToken = TokenUtil.sanitizeTokenString(token)
 
-    val pushNotification: SimpleApnsPushNotification = new SimpleApnsPushNotification(sanitizedToken, "com.example.myApp", payload)
+    val pushNotification: SimpleApnsPushNotification = new SimpleApnsPushNotification(sanitizedToken, href.getOrElse("-"), payload)
 
     val sendNotificationFuture: JFuture[PushNotificationResponse[SimpleApnsPushNotification]] = apnsClient.sendNotification(pushNotification)
 

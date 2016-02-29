@@ -14,7 +14,7 @@ import scala.concurrent.Future
 import scala.util.{Try, Failure, Success}
 import scala.util.parsing.json.JSONObject
 
-case class AndroidNotifier(title: String, key: String)
+case class AndroidNotifier(title: String, key: String, to: String)
   extends LazyLogging
   with Notifier {
 
@@ -31,11 +31,12 @@ case class AndroidNotifier(title: String, key: String)
   def notify(message: String, href: Option[String] = None): Future[Try[String]] = {
     val json = JSONObject(Map(
       "data" -> JSONObject(Map(
-        "name" -> title,
+        "title" -> title,
+        "msgcnt" -> 0,
         "message" -> message,
-        "href" -> href
+        "href" -> href.getOrElse("")
       )),
-      "to" -> "/topics/global"
+      "to" -> to
     ))
 
     val entity = HttpEntity(MediaTypes.`application/json`, json.toString())
