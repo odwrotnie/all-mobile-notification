@@ -21,3 +21,5 @@ libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.1.2" % "runtime
 libraryDependencies += "com.typesafe.akka" %% "akka-slf4j" % "2.4.2"
 
 libraryDependencies += "joda-time" % "joda-time" % "2.9.2"
+
+libraryDependencies += "com.relayrides" % "pushy" % "0.5.2"

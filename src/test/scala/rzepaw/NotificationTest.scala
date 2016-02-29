@@ -8,8 +8,13 @@ import scala.concurrent.duration.Duration
 class NotificationTest
   extends FlatSpec {
 
-  "Notifications" should "work" in {
-    val response = Await.result(AndroidNotifier("?", "?").notify("asdf", "asdf"), Duration.Inf)
+  "IPhone notifications" should "work" in {
+    val response = Await.result(IPhoneNotifier("?").notify("asdf"), Duration.Inf)
+    println(s"Response: $response")
+  }
+
+  "Android notifications" should "work" in {
+    val response = Await.result(AndroidNotifier("?", "?").notify("asdf"), Duration.Inf)
     println(s"Response: $response")
   }
 }

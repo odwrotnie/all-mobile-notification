@@ -11,22 +11,24 @@ import com.typesafe.scalalogging.LazyLogging
 import rzepaw.exceptions.Unauthorized
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
+import scala.util.{Try, Failure, Success}
 import scala.util.parsing.json.JSONObject
 
 case class AndroidNotifier(title: String, key: String)
-  extends LazyLogging {
+  extends LazyLogging
+  with Notifier {
+
+  val GCM_ADDRESS: String = "https://gcm-http.googleapis.com"
 
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
   import system.dispatcher
 
-  val URI = Uri("https://gcm-http.googleapis.com")
-    .withPath(Path / "gcm" / "send")
+  val uri = Uri(GCM_ADDRESS).withPath(Path / "gcm" / "send")
   val header = RawHeader("Authorization", s"key=$key")
 
-  def notify(message: String, href: String): Future[String] = {
+  def notify(message: String, href: Option[String] = None): Future[Try[String]] = {
     val json = JSONObject(Map(
       "data" -> JSONObject(Map(
         "name" -> title,
@@ -37,12 +39,10 @@ case class AndroidNotifier(title: String, key: String)
     ))
 
     val entity = HttpEntity(MediaTypes.`application/json`, json.toString())
-    val request = HttpRequest(HttpMethods.POST, uri = URI)
-      .withHeaders(header).withEntity(entity)
-    val responseFuture: Future[HttpResponse] = Http().singleRequest(request).map {
-      case HttpResponse(StatusCodes.Unauthorized, _, _, _) =>
-        throw Unauthorized
-      case r => r
+    val request = HttpRequest(HttpMethods.POST, uri = uri).withHeaders(header).withEntity(entity)
+    val responseFuture: Future[HttpResponse] = Http().singleRequest(request) flatMap {
+      case HttpResponse(StatusCodes.Unauthorized, _, _, _) => Future.failed(Unauthorized)
+      case r => Future.successful(r)
     }
     val messageFuture: Future[String] = responseFuture.flatMap(response => Unmarshal(response.entity).to[String])
 
@@ -51,6 +51,6 @@ case class AndroidNotifier(title: String, key: String)
       case Failure(t) => logger.error(s"Message sending failure - ${ t.getMessage }")
     }
 
-    messageFuture
+    messageFuture map { m => Success(m) }
   }
 }
