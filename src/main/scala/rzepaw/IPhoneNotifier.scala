@@ -11,7 +11,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 case class IPhoneNotifier(token: String)
   extends Notifier {
 
-  override def notify(message: String, href: Option[String]): SFuture[String] = {
+  override def notify(message: String, href: Option[String] = None): SFuture[String] = {
 
     val certificate: File = new File(getClass().getResource("/apple.certificate").toURI)
 
