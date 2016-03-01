@@ -45,8 +45,10 @@ case class AndroidNotifier(title: String, key: String, to: String)
     val entity = HttpEntity(MediaTypes.`application/json`, json.toString())
     val request = HttpRequest(HttpMethods.POST, uri = uri).withHeaders(header).withEntity(entity)
     val responseFuture: Future[HttpResponse] = Http().singleRequest(request) flatMap {
-      case HttpResponse(StatusCodes.Unauthorized, _, _, _) => Future.failed(Unauthorized)
-      case r => Future.successful(r)
+      case HttpResponse(StatusCodes.Unauthorized, _, _, _) =>
+        Future.failed(Unauthorized("Http status code = 401"))
+      case r =>
+        Future.successful(r)
     }
     val messageFuture: Future[GoogleResponse] = responseFuture.flatMap(response => Unmarshal(response.entity).to[GoogleResponse])
 
@@ -57,10 +59,10 @@ case class AndroidNotifier(title: String, key: String, to: String)
 
     messageFuture map {
       case GoogleResponse(_, _, 1, _, results) =>
-        val message = results.map(_.error).flatten.mkString(", ")
-        throw new Exception(message)
+        val message = results.flatMap(_.error).mkString(", ")
+        throw Unauthorized(message)
       case GoogleResponse(_, 1, _, _, results) =>
-        val message = results.map(_.message_id).flatten.mkString(", ")
+        val message = results.flatMap(_.message_id).mkString(", ")
         s"Sent messages: $message"
     }
   }
