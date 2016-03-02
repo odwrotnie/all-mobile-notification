@@ -31,7 +31,7 @@ case class AndroidNotifier(title: String, key: String, to: String)
   val uri = Uri(GCM_ADDRESS).withPath(Path / "gcm" / "send")
   val header = RawHeader("Authorization", s"key=$key")
 
-  def notify(message: String, href: Option[String] = None): Future[String] = {
+  def notify(message: String, href: Option[String] = None): Future[GoogleResponse] = {
 
     val e = entity(json(message, href))
 
@@ -53,9 +53,8 @@ case class AndroidNotifier(title: String, key: String, to: String)
       case GoogleResponse(_, _, 1, _, results) =>
         val message = results.flatMap(_.error).mkString(", ")
         throw Unauthorized(message)
-      case GoogleResponse(_, 1, _, _, results) =>
-        val message = results.flatMap(_.message_id).mkString(", ")
-        s"Sent messages: $message"
+      case gr: GoogleResponse =>
+        gr
     }
   }
 

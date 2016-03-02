@@ -5,5 +5,5 @@ import scala.util.Try
 
 trait Notifier {
 
-  def notify(message: String, href: Option[String]): Future[String]
+  def notify(message: String, href: Option[String]): Future[_]
 }

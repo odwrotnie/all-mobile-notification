@@ -23,3 +23,5 @@ libraryDependencies += "com.typesafe.akka" %% "akka-slf4j" % "2.4.2"
 libraryDependencies += "joda-time" % "joda-time" % "2.9.2"
 
 libraryDependencies += "com.relayrides" % "pushy" % "0.5.2"
+
+libraryDependencies += "com.notnoop.apns" % "apns" % "1.0.0.Beta6"

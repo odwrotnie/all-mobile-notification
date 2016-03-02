@@ -1,40 +1,25 @@
 package rzepaw
 
 import java.io.File
-import java.util.concurrent.{Future => JFuture}
-import com.relayrides.pushy.apns.{PushNotificationResponse, ApnsClient}
-import com.relayrides.pushy.apns.util.{TokenUtil, ApnsPayloadBuilder, SimpleApnsPushNotification}
-import scala.concurrent.{Future => SFuture, Promise}
+import com.notnoop.apns.APNS
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
 
 case class IPhoneNotifier(token: String)
   extends Notifier {
 
-  override def notify(message: String, href: Option[String] = None): SFuture[String] = {
+  lazy val CERT_NAME = "/erconet.p12"
+  lazy val CERT_PATH = getClass.getResource(CERT_NAME).getPath
+  lazy val CERT_PASS = "1234"
 
-    val certificate: File = new File(getClass().getResource("/apple.certificate").toURI)
-
-    val apnsClient = new ApnsClient[SimpleApnsPushNotification](certificate, "p12-file-password")
-    apnsClient.connect(ApnsClient.DEVELOPMENT_APNS_HOST).await()
-
-    val payloadBuilder = new ApnsPayloadBuilder()
-    payloadBuilder.setAlertBody(message)
-
-    val payload = payloadBuilder.buildWithDefaultMaximumLength()
-    val sanitizedToken = TokenUtil.sanitizeTokenString(token)
-
-    val pushNotification: SimpleApnsPushNotification = new SimpleApnsPushNotification(sanitizedToken, href.getOrElse("-"), payload)
-
-    val sendNotificationFuture: JFuture[PushNotificationResponse[SimpleApnsPushNotification]] = apnsClient.sendNotification(pushNotification)
-
-    val responseFuture: SFuture[PushNotificationResponse[SimpleApnsPushNotification]] =J2SFuture(sendNotificationFuture)
-
-    responseFuture.onComplete(_ => apnsClient.disconnect())
-
-    responseFuture.map { r =>
-      if (r.isAccepted) "Sent"
-      else throw new Exception(r.getRejectionReason)
-    }
+  override def notify(message: String, href: Option[String] = None): Future[Unit] = Future {
+    val service = APNS.newService.withCert(CERT_PATH, CERT_PASS)
+      .withSandboxDestination.build
+    val payload = APNS.newPayload.alertBody(message)
+      .badge(1)
+      .sound("default")
+      .customField("href", href.getOrElse("-")).build
+    service.push(token, payload)
   }
 }
