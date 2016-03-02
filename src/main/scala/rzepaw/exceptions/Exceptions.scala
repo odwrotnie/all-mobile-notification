@@ -1,3 +1,3 @@
 package rzepaw.exceptions
 
-case object Unauthorized extends Exception("Unauthorized")
+case class Unauthorized(m: String = "Error") extends Exception(s"Unauthorized: $m")
