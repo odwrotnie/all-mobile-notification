@@ -25,3 +25,5 @@ libraryDependencies += "joda-time" % "joda-time" % "2.9.2"
 libraryDependencies += "com.relayrides" % "pushy" % "0.5.2"
 
 libraryDependencies += "com.notnoop.apns" % "apns" % "1.0.0.Beta6"
+
+libraryDependencies += "com.github.fernandospr" % "java-wns" % "1.3.1"
