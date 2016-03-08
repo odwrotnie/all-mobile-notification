@@ -1,12 +1,15 @@
-package rzepaw
+package mobile.notifier.ios
 
-import java.io.File
 import com.notnoop.apns.APNS
-import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
-import scala.concurrent.ExecutionContext.Implicits.global
+import mobile.notifier.Notifier
 
-case class IPhoneNotifier(token: String)
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+/**
+  * @param token the token for the iOS application
+  */
+case class Ios(token: String)
   extends Notifier {
 
   lazy val CERT_NAME = "/erconet.p12"

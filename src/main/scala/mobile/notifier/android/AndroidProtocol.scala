@@ -1,4 +1,4 @@
-package rzepaw.android
+package mobile.notifier.android
 
 import spray.json.DefaultJsonProtocol
 

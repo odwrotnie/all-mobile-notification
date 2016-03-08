@@ -1,21 +1,26 @@
-package rzepaw
+package mobile.notifier.android
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.headers.RawHeader
-import akka.http.scaladsl.model._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.Uri.Path
+import akka.http.scaladsl.model._
+import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.unmarshalling.Unmarshal
 import akka.stream.ActorMaterializer
 import com.typesafe.scalalogging.LazyLogging
-import rzepaw.android.{GoogleResponse, AndroidProtocol}
-import rzepaw.exceptions.Unauthorized
-import spray.json.DefaultJsonProtocol
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
-import scala.concurrent.Future
-import scala.util.{Try, Failure, Success}
-import scala.util.parsing.json.JSONObject
+import mobile.notifier.Notifier
+import mobile.notifier.exceptions.Unauthorized
 
+import scala.concurrent.Future
+import scala.util.parsing.json.JSONObject
+import scala.util.{Failure, Success}
+
+/**
+  * @param title shown in the header of the message
+  * @param key for Google Messages authentication
+  * @param to the Android application token
+  */
 case class AndroidNotifier(title: String, key: String, to: String)
   extends Notifier
     with AndroidProtocol
