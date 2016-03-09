@@ -1,4 +1,4 @@
-# all-mobile-notification
+# All Mobile Notifier
 
 ## Settings
 

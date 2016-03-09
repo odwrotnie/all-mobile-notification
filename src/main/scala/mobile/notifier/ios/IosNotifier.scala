@@ -10,9 +10,9 @@ import scala.concurrent.Future
 /**
   * @param token the token for the iOS application
   */
-case class Ios(token: String,
-               certPath: String = Properties.get("notifier", "ios", "cert.path").get,
-               certPass: String = Properties.get("notifier", "ios", "cert.pass").get)
+case class IosNotifier(token: String,
+                       certPath: String = Properties.get("notifier", "ios", "cert.path").get,
+                       certPass: String = Properties.get("notifier", "ios", "cert.pass").get)
   extends Notifier[Unit] {
 
   lazy val CERT_PATH = getClass.getResource(certPath).getPath

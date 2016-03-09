@@ -2,7 +2,7 @@ package rzepaw
 
 import mobile.notifier.android.AndroidNotifier
 import mobile.notifier.helper.Properties
-import mobile.notifier.ios.Ios
+import mobile.notifier.ios.IosNotifier
 import mobile.notifier.windows.WindowsNotifier
 import org.scalatest.FlatSpec
 
@@ -13,7 +13,7 @@ class NotificationTest
   extends FlatSpec {
 
   "IPhone notifications" should "work" in {
-    val n = Ios(token = "4b05a4e61ce8ebc4491524ada6039bc798194a52b77cb3ce848980e479ba3462")
+    val n = IosNotifier(token = "4b05a4e61ce8ebc4491524ada6039bc798194a52b77cb3ce848980e479ba3462")
     val response = Await.result(n.notify("Wiadomość!", None), Duration.Inf)
     println(s"Response: $response")
   }
