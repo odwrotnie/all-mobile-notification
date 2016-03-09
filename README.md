@@ -18,6 +18,6 @@ Set the following properties in `notifier.properties' or `System.properties`:
 
 ### Windows
 
-Set the following properties in `notifier.properties' or `System.properties`:
+Set the following properties in `notifier.properties` or `System.properties`:
  - `windows.sid`
  - `windows.secret`
