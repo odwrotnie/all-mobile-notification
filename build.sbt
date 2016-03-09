@@ -1,4 +1,4 @@
-name := "All Mobile Notificator"
+name := "All Mobile Notifier"
 
 version := "1.0"
 
