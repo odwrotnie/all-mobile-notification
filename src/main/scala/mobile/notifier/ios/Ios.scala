@@ -10,15 +10,15 @@ import scala.concurrent.Future
 /**
   * @param token the token for the iOS application
   */
-case class Ios(token: String = Properties.get("notifier", "ios", "token").get)
+case class Ios(token: String,
+               certPath: String = Properties.get("notifier", "ios", "cert.path").get,
+               certPass: String = Properties.get("notifier", "ios", "cert.pass").get)
   extends Notifier[Unit] {
 
-  lazy val CERT_NAME = "/ios-cert.p12"
-  lazy val CERT_PATH = getClass.getResource(CERT_NAME).getPath
-  lazy val CERT_PASS = "1234"
+  lazy val CERT_PATH = getClass.getResource(certPath).getPath
 
   override def notify(message: String, href: Option[String] = None): Future[Unit] = Future {
-    val service = APNS.newService.withCert(CERT_PATH, CERT_PASS)
+    val service = APNS.newService.withCert(CERT_PATH, certPass)
       .withSandboxDestination.build
     val payload = APNS.newPayload.alertBody(message)
       .badge(1)
