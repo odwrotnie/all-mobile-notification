@@ -1,4 +1,4 @@
-name := "All Mobile Notifier"
+name := "all-mobile-notifier"
 
 version := "1.0"
 
@@ -27,3 +27,8 @@ libraryDependencies += "com.relayrides" % "pushy" % "0.5.2"
 libraryDependencies += "com.notnoop.apns" % "apns" % "1.0.0.Beta6"
 
 libraryDependencies += "com.github.fernandospr" % "java-wns" % "1.3.1"
+
+assemblyMergeStrategy in assembly := {
+  case "META-INF/io.netty.versions.properties" => MergeStrategy.concat
+  case x => (assemblyMergeStrategy in assembly).value(x) // The old one
+}
