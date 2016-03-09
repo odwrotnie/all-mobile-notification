@@ -11,6 +11,7 @@ import akka.stream.ActorMaterializer
 import com.typesafe.scalalogging.LazyLogging
 import mobile.notifier.Notifier
 import mobile.notifier.exceptions.Unauthorized
+import mobile.notifier.helper.Properties
 
 import scala.concurrent.Future
 import scala.util.parsing.json.JSONObject
@@ -21,8 +22,10 @@ import scala.util.{Failure, Success}
   * @param key for Google Messages authentication
   * @param to the Android application token
   */
-case class AndroidNotifier(title: String, key: String, to: String)
-  extends Notifier
+case class AndroidNotifier(to: String,
+                           title: String = Properties.get("notifier", "android", "title").get,
+                           key: String = Properties.get("notifier", "android", "key").get)
+  extends Notifier[GoogleResponse]
     with AndroidProtocol
     with LazyLogging {
 

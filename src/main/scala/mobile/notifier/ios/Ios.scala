@@ -2,6 +2,7 @@ package mobile.notifier.ios
 
 import com.notnoop.apns.APNS
 import mobile.notifier.Notifier
+import mobile.notifier.helper.Properties
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -9,8 +10,8 @@ import scala.concurrent.Future
 /**
   * @param token the token for the iOS application
   */
-case class Ios(token: String)
-  extends Notifier {
+case class Ios(token: String = Properties.get("notifier", "ios", "token").get)
+  extends Notifier[Unit] {
 
   lazy val CERT_NAME = "/erconet.p12"
   lazy val CERT_PATH = getClass.getResource(CERT_NAME).getPath

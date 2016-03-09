@@ -7,9 +7,9 @@ import mobile.notifier.helper.FutureConverter
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 
-trait Notifier {
+trait Notifier[RESP] {
 
-  def notify(message: String, href: Option[String]): Future[_]
+  def notify(message: String, href: Option[String]): Future[RESP]
 
   /**
     * Nonblocking method that sends the notification
