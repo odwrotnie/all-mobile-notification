@@ -13,7 +13,7 @@ import scala.concurrent.Future
 case class Ios(token: String = Properties.get("notifier", "ios", "token").get)
   extends Notifier[Unit] {
 
-  lazy val CERT_NAME = "/erconet.p12"
+  lazy val CERT_NAME = "/ios-cert.p12"
   lazy val CERT_PATH = getClass.getResource(CERT_NAME).getPath
   lazy val CERT_PASS = "1234"
 
