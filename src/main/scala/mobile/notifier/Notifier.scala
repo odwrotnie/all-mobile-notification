@@ -21,7 +21,8 @@ trait Notifier[RESP] {
     * @param href The reference
     * @return the Unit future
     */
-  def notifyFuture(message: String, href: String): JFuture[_] = FutureConverter.toJava(notify(message, Some(href)))
+  def notifyFuture(message: String, href: Option[String]): JFuture[_] =
+    FutureConverter.toJava(notify(message, href))
 
   def notifyAwait(message: String, href: Option[String]): Unit =
     Await.result(notify(message, href), Duration.Inf)
